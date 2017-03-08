@@ -1,0 +1,12 @@
+GetPersonalWeatherStation what is the weather like outside
+GetPersonalWeatherStation what is the current weather
+GetPersonalWeatherStation what is the latest weather
+GetPersonalWeatherStation what's the weather like outside
+GetPersonalWeatherStation what's the lastest weather
+GetPersonalWeatherStation what's the current weather
+GetPersonalWeatherStation what are the current conditions outside
+GetPersonalWeatherStation for the conditions outside
+GetPersonalWeatherStation for the weather outside
+GetPersonalWeatherStation for the weather conditions outside
+GetPersonalWeatherStation for the latest conditions outside
+GetPersonalWeatherStation for the latest conditions
