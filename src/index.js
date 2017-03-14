@@ -201,15 +201,14 @@ function handleGetPersonalWeatherStationIntent(intent, session, response) {
           }
           
           //Precipitation
-          //var precip_in = jsonObject.current_observation.precip_today_in;
-          var precip_in = 1.2
+          var precip_in = jsonObject.current_observation.precip_today_in;
           if ( precip_in <= 0.01)
           {
             var precip = "";
           }
           else
           {
-            var precip = "There has been measurable precipitation of " + jsonObject.current_observation.precip_today_in + " inches so far today.";
+            var precip = " There has been measurable precipitation of " + precip_in + " inches so far today.";
           }
 
           speechText = "Currently, your personal weather station reports " + jsonObject.current_observation.weather + temp + winds + pressure + precip;
