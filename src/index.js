@@ -14,11 +14,11 @@ var http = require('http');
  * App ID for the skill
  */
 
-var APP_ID = "APP_ID"; //replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
-var WUNDERGROUND_API_KEY = "API_KEY"; //replace with your wunderground API key
+var APP_ID = "amzn1.ask.skill.89dfb660-564d-4969-a861-bd678d37abe7"; //replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
+var WUNDERGROUND_API_KEY = "c814c56054a82500"; //replace with your wunderground API key
 var WUNDERGROUND_BASE_URL = "http://api.wunderground.com/api/";
 var WUNDERGROUND_QUERY_URL = "/conditions/q/pws:";
-var WUNDERGROUND_PWS_ID = "PWS_ID"; //replace with your personal weather station ID
+var WUNDERGROUND_PWS_ID = "KIAIOWAC38"; //replace with your personal weather station ID
 var RESPONSE_FORMAT = ".json";
 
 /**
@@ -200,9 +200,19 @@ function handleGetPersonalWeatherStationIntent(intent, session, response) {
             var winds = ". Winds are " + wind_dir + " at " + wind_speed + " miles per hour.";
           }
           
+          //Precipitation
+          //var precip_in = jsonObject.current_observation.precip_today_in;
+          var precip_in = 1.2
+          if ( precip_in <= 0.01)
+          {
+            var precip = "";
+          }
+          else
+          {
+            var precip = "There has been measurable precipitation of " + jsonObject.current_observation.precip_today_in + " inches so far today.";
+          }
 
-
-          speechText = "Currently, your personal weather station reports " + jsonObject.current_observation.weather + temp + winds + pressure;
+          speechText = "Currently, your personal weather station reports " + jsonObject.current_observation.weather + temp + winds + pressure + precip;
         } catch (e) {
           speechText = "I'm sorry, but I can't do that right now. Please try again later.";
         }
