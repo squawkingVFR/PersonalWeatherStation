@@ -124,6 +124,10 @@ function handleGetPersonalWeatherStationIntent(intent, session, response) {
           }
           
           //determine if there is a heat index or windchill and assign to a common variable
+          if(dewpnt_rnd > temp_rnd)
+          {
+            var dewpnt_rnd = temp_rnd;
+          }
           if(temp_rnd = feelslike_rnd)
           {            
             var temp = ", with a temperature of " + temp_rnd + ", and a dewpoint of " + dewpnt_rnd;
@@ -191,6 +195,10 @@ function handleGetPersonalWeatherStationIntent(intent, session, response) {
           }
           var wind_speed = Math.round(jsonObject.current_observation.wind_mph);
           var wind_gust = Math.round(jsonObject.current_observation.wind_gust_mph);
+          if(wind_speed <= 3 )
+          {
+            var winds = ". Winds are calm.";
+          }
           if((wind_gust - wind_speed) >= 10 )
           {
             var winds = ". Winds are " + wind_dir + " at " + wind_speed + ", gusting to " + wind_gust + " miles per hour."
@@ -234,4 +242,3 @@ exports.handler = function (event, context) {
   var personalWeatherStation = new PersonalWeatherStation();
   personalWeatherStation.execute(event, context);
 };
-
