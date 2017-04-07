@@ -199,7 +199,7 @@ function handleGetPersonalWeatherStationIntent(intent, session, response) {
           {
             var winds = ". Winds are calm.";
           }
-          if((wind_gust - wind_speed) >= 10 )
+          else if((wind_gust - wind_speed) >= 10 )
           {
             var winds = ". Winds are " + wind_dir + " at " + wind_speed + ", gusting to " + wind_gust + " miles per hour."
           }
