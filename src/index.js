@@ -14,12 +14,7 @@ var http = require('http');
  * App ID for the skill
  */
 
-var APP_ID = "amzn1.ask.skill.89dfb660-564d-4969-a861-bd678d37abe7"; //replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
-var WUNDERGROUND_API_KEY = "c814c56054a82500"; //replace with your wunderground API key
-var WUNDERGROUND_BASE_URL = "http://api.wunderground.com/api/";
-var WUNDERGROUND_QUERY_URL = "/conditions/q/pws:";
-var WUNDERGROUND_PWS_ID = "KIAIOWAC38"; //replace with your personal weather station ID
-var RESPONSE_FORMAT = ".json";
+var APP_ID = "amzn1.ask.skill.89dfb660-564d-4969-a861-bd678d37abe7";
 
 /**
  * The AlexaSkill prototype and helper functions
@@ -83,7 +78,7 @@ PersonalWeatherStation.prototype.intentHandlers = {
 function handleGetPersonalWeatherStationIntent(intent, session, response) {
   var speechText = "Personal Weather Station is currently unavailable. Try again later.";
 
-  var query_url = WUNDERGROUND_BASE_URL + WUNDERGROUND_API_KEY + WUNDERGROUND_QUERY_URL + WUNDERGROUND_PWS_ID + RESPONSE_FORMAT;
+  var query_url = "http://pws-test.azurewebsites.net/api/pwsPowerShellFunction";
   var body = '';
   var jsonObject;
 
@@ -96,141 +91,20 @@ function handleGetPersonalWeatherStationIntent(intent, session, response) {
     res.on('end', () => {
       console.log("RequestBody: " + body)
       jsonObject = JSON.parse(body);
-      
-      if(jsonObject.response.results != undefined)
-      {
-        var speechOutput = "Please try again";
-        var repromptText = "Please try asking for the weather one more time";
-        response.ask(speechOutput, repromptText);
-      }else{
         try {
-          var temp_rnd = Math.round(jsonObject.current_observation.temp_f);
-          var dewpnt_rnd = Math.round(jsonObject.current_observation.dewpoint_f);
-          var feelslike_rnd = Math.round(jsonObject.current_observation.feelslike_f);
-          var baro_pressure_trend = jsonObject.current_observation.baro_pressure_trend;
           
-          //determine if pressure is rising or falling
-          if(baro_pressure_trend = "+")
-          {
-            var pressure = ". The barometric pressure is " + jsonObject.current_observation.pressure_in + " inches, and rising.";
-          }
-          else if(baro_pressure_trend = "-")
-          {
-            var pressure = ". The barometric pressure is " + jsonObject.current_observation.pressure_in + " inches, and falling.";
-          }
-          else
-          {
-            var pressure = ". The barometric pressure is " + jsonObject.current_observation.pressure_in + " inches, and steady.";
-          }
-          
-          //determine if there is a heat index or windchill and assign to a common variable
-          if(dewpnt_rnd > temp_rnd)
-          {
-            var dewpnt_rnd = temp_rnd;
-          }
-          if(temp_rnd = feelslike_rnd)
-          {            
-            var temp = ", with a temperature of " + temp_rnd + ", and a dewpoint of " + dewpnt_rnd;
-          }
-          else
-          {
-            var temp = ", with a temperature of " + temp_rnd + ", and a dewpoint of " + dewpnt_rnd + ".  It feels like " + feelslike_rnd + ".";
-          }
-          
-          //winds
-          var wind_abrev = jsonObject.current_observation.wind_dir;
-          switch (wind_abrev)
-          {
-            case 'North':
-              var wind_dir = "from the north";
-              break;
-            case 'South':
-              var wind_dir = 'from the south';
-              break;
-            case 'East':
-              var wind_dir = 'from the east';
-              break;
-            case 'West':
-              var wind_dir = 'from the west';
-              break;
-            case 'NW':
-              var wind_dir = 'from the northwest';
-              break;
-            case 'NE':
-              var wind_dir = 'from the northeast';
-              break;
-            case 'SW':
-              var wind_dir = 'from the southwest';
-              break;
-            case 'SE':
-              var wind_dir = 'from the southeast';
-              break;
-            case 'WNW':
-              var wind_dir = 'from the west northwest';
-              break;
-            case 'ENE':
-              var wind_dir = 'from the east northeast';
-              break;
-            case 'WSW':
-              var wind_dir = 'from the west southwest';
-              break;
-            case 'ESE':
-              var wind_dir = 'from the east southeast';
-              break;
-            case 'NNW':
-              var wind_dir = 'from the north northwest';
-              break;
-            case 'NNE':
-              var wind_dir = 'from the north northeast';
-              break;
-            case 'SSW':
-              var wind_dir = 'from the south southwest';
-              break;
-            case 'SSE':
-              var wind_dir = 'from the south southeast';
-              break;
-            case 'Variable':
-              var wind_dir = 'variable';
-              break;
-          }
-          var wind_speed = Math.round(jsonObject.current_observation.wind_mph);
-          var wind_gust = Math.round(jsonObject.current_observation.wind_gust_mph);
-          if(wind_speed <= 3 )
-          {
-            var winds = ". Winds are calm.";
-          }
-          else if((wind_gust - wind_speed) >= 10 )
-          {
-            var winds = ". Winds are " + wind_dir + " at " + wind_speed + ", gusting to " + wind_gust + " miles per hour."
-          }
-          else
-          {
-            var winds = ". Winds are " + wind_dir + " at " + wind_speed + " miles per hour.";
-          }
-          
-          //Precipitation
-          var precip_in = jsonObject.current_observation.precip_today_in;
-          if ( precip_in <= 0.01)
-          {
-            var precip = "";
-          }
-          else
-          {
-            var precip = " There has been measurable precipitation of " + precip_in + " inches so far today.";
-          }
-
-          speechText = "Currently, your personal weather station reports " + jsonObject.current_observation.weather + temp + winds + pressure + precip;
+          speechText = jsonObject.string;
         } catch (e) {
           speechText = "I'm sorry, but I can't do that right now. Please try again later.";
         }
 
         var speechOutput = {
           speech: speechText,
-          type: AlexaSkill.speechOutputType.PLAIN_TEXT
+          type: AlexaSkill.speechOutputType.SSML
         };
         response.tellWithCard(speechOutput, "Personal Weather Station", speechText);
       }
-    })
+    )
   }).on('error', (e) => {
     console.log(`Got error: ${e.message}`);
   });
